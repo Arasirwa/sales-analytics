@@ -7,9 +7,9 @@ from sqlalchemy import create_engine, exc
 from urllib.parse import quote_plus
 from dotenv import load_dotenv
 
-# ---------------------------------------------------------
+
 # 1. SETUP LOGGING
-# ---------------------------------------------------------
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -17,9 +17,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# ---------------------------------------------------------
+
 # 2. CONFIGURATION & VALIDATION
-# ---------------------------------------------------------
+
 def load_config():
     """Loads environment variables and ensures required keys exist."""
     load_dotenv()
@@ -36,9 +36,8 @@ def load_config():
     config['USD_TO_INR_RATE'] = float(os.getenv('USD_TO_INR_RATE', 82.0)) 
     return config
 
-# ---------------------------------------------------------
 # 3. DATABASE EXTRACTION
-# ---------------------------------------------------------
+
 def get_db_engine(config, target_db=None):
     """Creates and verifies the database connection."""
     db_to_use = target_db if target_db else config['DB_NAME']
@@ -64,9 +63,9 @@ def extract_table(engine, table_name):
         logger.error(f"Error extracting {table_name}: {e}")
         return pd.DataFrame()
 
-# ---------------------------------------------------------
+
 # 4. TRANSFORMATION LOGIC
-# ---------------------------------------------------------
+
 def transform_customers(df):
     if df.empty:
         return df
@@ -165,9 +164,8 @@ def transform_transactions(df, exchange_rate):
         logger.error(f"Error transforming transactions: {e}")
         return df
 
-# ---------------------------------------------------------
 # 5. MAIN EXECUTION
-# ---------------------------------------------------------
+
 def main():
     logger.info("Starting Sales Analytics Pipeline...")
     
@@ -207,9 +205,9 @@ def main():
 
     logger.info("Transformations complete. Preparing to load...")
     
-    # ---------------------------------------------------------
+  
     # 4. LOAD PHASE
-    # ---------------------------------------------------------
+  
     staging_engine = get_db_engine(config, target_db=config['STAGING_DB_NAME'])
     logger.info("Loading cleaned data into staging database...")
 
